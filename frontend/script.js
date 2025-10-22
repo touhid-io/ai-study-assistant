@@ -26,7 +26,7 @@ const state = {
     }
 };
 
-const API_URL = 'https://ai-study-assistant-34i6.onrender.com';
+const API_URL = 'https://ai-study-assistant-34i6.onrender.com/api';
 
 const translations = {
     en: {
