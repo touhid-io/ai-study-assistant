@@ -83,6 +83,15 @@ This project runs on a simple client-server model.
 - **Database**: SQLite
 - **Text Extraction**: PyPDF2, python-docx
 
+## 🖼️ Interface Preview 
+### 📸 Screenshot 
+
+![Screenshot](https://res.cloudinary.com/dad8v7kqc/image/upload/v1761151188/Screenshot_2025-10-22_223804_sucfg1.png) 
+
+### 🌐 Preview Link 
+**[➡️ Click Here to View Live Project](https://ai-study-assistant-frontend-a3uj.onrender.com/)**
+
+
 ## 🚀 Getting Started (How to Run Locally)
 
 This is the most important part for open-source users. Follow these steps to run the project on your own machine.
