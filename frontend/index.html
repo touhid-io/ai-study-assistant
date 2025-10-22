@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Study Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dad8v7kqc/image/upload/v1761099079/Screenshot_2025-10-22_080607_h4vctn.png">
+</head>
+<body data-theme="dark">
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" id="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a3 3 0 0 0-3 3v1a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                    <path d="M6.2 12.5a3 3 0 0 0-3 3v1a3 3 0 0 0 6 0v-1a3 3 0 0 0-3-3Z"/>
+                    <path d="M17.8 12.5a3 3 0 0 0-3 3v1a3 3 0 0 0 6 0v-1a3 3 0 0 0-3-3Z"/>
+                </svg>
+                <span class="logo-text">StudyAI</span>
+            </div>
+            
+            <div class="header-actions">
+                <select class="language-selector" id="language-select">
+                    <option value="en">English</option>
+                    <option value="bn">বাংলা</option>
+                </select>
+                
+                <button class="icon-btn" id="theme-toggle-btn" data-tooltip="Toggle Theme">
+                    <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </button>
+                
+                <button class="icon-btn" id="sidebar-toggle-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Active Session</div>
+                <div id="active-session-container"></div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Previous Sessions</div>
+                <div id="session-history"></div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Menu</div>
+                <div class="menu-item" id="nav-settings-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6m-9-9h6m6 0h6"/>
+                    </svg>
+                    <span>Settings</span>
+                </div>
+                <div class="menu-item" id="nav-analytics-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 20V10m-6 10V4M6 20v-6"/>
+                    </svg>
+                    <span>Analytics</span>
+                </div>
+                <div class="menu-item" id="nav-help-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>Help</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="stepper" id="stepper">
+                <div class="step" data-step="upload">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Upload</div>
+                </div>
+                <div class="step" data-step="generating">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Generate</div>
+                </div>
+                <div class="step" data-step="answering">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Answer</div>
+                </div>
+                <div class="step" data-step="results">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Results</div>
+                </div>
+            </div>
+
+            <div class="view active" id="upload-view">
+                <div class="card">
+                    <h2 style="margin-bottom: 1rem;">Upload Your Document</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        Supports PDF, DOCX, TXT, and Markdown files
+                    </p>
+                    
+                    <div class="upload-zone" id="upload-zone">
+                        <input type="file" id="file-input" accept=".txt,.pdf,.docx,.md" style="display: none;">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <h3 style="margin-bottom: 0.5rem;">Click to upload or drag & drop</h3>
+                        <p id="file-name" style="color: var(--text-secondary);">No file selected</p>
+                    </div>
+                    
+                    <div id="upload-error" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error); border-radius: 0.5rem; color: var(--error);"></div>
+                    
+                    <button class="btn btn-primary" id="upload-btn" style="width: 100%; margin-top: 1.5rem;" disabled>
+                        <span>Upload & Generate</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="view" id="settings-view">
+                <div class="card">
+                    <h2 style="margin-bottom: 2rem;">Question Settings</h2>
+                    
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label class="setting-label">Number of Questions: <span id="question-count-display">10</span></label>
+                            <input type="range" class="slider" id="question-count" min="5" max="50" value="10" step="5">
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="setting-label">Difficulty Level</label>
+                            <div class="difficulty-options">
+                                <button class="difficulty-btn" data-difficulty="easy">Easy</button>
+                                <button class="difficulty-btn active" data-difficulty="medium">Medium</button>
+                                <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="setting-label">Timer (minutes)</label>
+                            <input type="range" class="slider" id="timer-setting" min="0" max="60" value="0" step="5">
+                            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.5rem;">
+                                <span id="timer-display">No time limit</span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-secondary" id="back-to-upload-btn" style="margin-top: 2rem;">
+                        Back to Upload
+                    </button>
+                    <button class="btn btn-primary" id="start-generation-btn" style="margin-top: 1rem; width: 100%;">
+                        Save & Return
+                    </button>
+                </div>
+            </div>
+
+            <div class="view" id="generating-view">
+                <div class="card" style="text-align: center;">
+                    
+                    <div id="generating-loader-content">
+                        <div class="loader" style="margin: 0 auto 1.5rem;"></div>
+                        <h2 id="generating-status">Analyzing Document...</h2>
+                        <p id="generating-info" style="color: var(--text-secondary); margin-top: 1rem;"></p>
+                    </div>
+            
+                    <div id="generating-success-content" style="display: none;">
+                        <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <h2 id="generating-success-status" style="margin-bottom: 1rem;">Generation Complete!</h2>
+                        <p id="generating-success-info" style="color: var(--text-secondary);"></p>
+                    </div>
+                    
+                    <div id="generated-questions-list" style="margin-top: 2rem; max-height: 400px; overflow-y: auto;"></div>
+                    
+                    <button class="btn btn-primary" id="preview-questions-btn" style="display: none; width: 100%; margin-top: 1.5rem;">
+                        <span>Preview Questions</span>
+                    </button>
+            
+                </div>
+            </div>
+
+            <div class="view" id="answering-view">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2>Answer the Questions</h2>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <p id="answered-count" style="color: var(--text-secondary); font-weight: 600;">0/0 answered</p>
+                        <div id="timer-display-active" style="display: none; background: var(--bg-secondary); padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 700; font-size: 1.125rem;"></div>
+                    </div>
+                </div>
+                
+                <div id="question-list"></div>
+                
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn btn-secondary" id="save-exit-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        <span>Save & Exit</span>
+                    </button>
+                    <button class="btn btn-primary" id="submit-btn" style="flex: 1;" disabled>
+                        <span>Submit All Answers</span>
+                    </button>
+                </div>
+                
+                <div style="margin-top: 1rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: 0.5rem; font-size: 0.875rem; color: var(--text-secondary);">
+                    <strong>Keyboard Shortcuts:</strong> 
+                    <span class="kbd">1-4</span> Select option • 
+                    <span class="kbd">Space</span> Next question • 
+                    <span class="kbd">B</span> Bookmark
+                </div>
+            </div>
+
+            <div class="view" id="results-view">
+                <div class="card">
+                    <div class="result-hero">
+                        <h1 id="result-title">Your Results</h1>
+                        <div class="result-score" id="result-score">0/0</div>
+                        <p id="result-message" style="font-size: 1.125rem; color: var(--text-secondary);"></p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-correct">0</div>
+                            <div class="stat-label">Correct Answers</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                            <div class="stat-value" id="stat-wrong">0</div>
+                            <div class="stat-label">Wrong Answers</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <div class="stat-value" id="stat-percentage">0%</div>
+                            <div class="stat-label">Accuracy</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                            <div class="stat-value" id="stat-time">0m</div>
+                            <div class="stat-label">Time Taken</div>
+                        </div>
+                    </div>
+                    
+                    <div id="incorrect-answers-section"></div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button class="btn btn-primary" id="discuss-ai-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            <span>Discuss with AI</span>
+                        </button>
+                        <button class="btn btn-secondary" id="retry-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                            </svg>
+                            <span>Retry</span>
+                        </button>
+                        <button class="btn btn-secondary" id="new-session-btn">New Session</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view" id="discussion-view">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2>AI Discussion</h2>
+                        <button class="btn btn-secondary" id="export-chat-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            <span>Export</span>
+                        </button>
+                    </div>
+                    
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-messages"></div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="chat-input" placeholder="Ask me anything about the topic...">
+                            <button class="btn btn-primary" id="chat-send-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"/>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-secondary" id="back-to-results-btn" style="margin-top: 1rem;">
+                        Back to Results
+                    </button>
+                </div>
+            </div>
+
+            <div class="view" id="analytics-view">
+                <div class="card">
+                    <h2 style="margin-bottom: 2rem;">Performance Analytics</h2>
+                    
+                    <div class="chart-container">
+                        <h3 style="margin-bottom: 1rem;">Topic Performance</h3>
+                        <div id="topic-chart"></div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-sessions">0</div>
+                            <div class="stat-label">Total Sessions</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <div class="stat-value" id="avg-score">0%</div>
+                            <div class="stat-label">Average Score</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                            <div class="stat-value" id="total-questions">0</div>
+                            <div class="stat-label">Questions Answered</div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-secondary" id="analytics-back-btn" style="margin-top: 2rem;">
+                        Back
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>

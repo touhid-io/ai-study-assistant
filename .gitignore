@@ -1,0 +1,12 @@
+# Environment
+backend/.env
+
+# Database
+backend/study_assistant.db
+
+# Python
+backend/__pycache__/
+*.pyc
+
+# OS
+.DS_Store
